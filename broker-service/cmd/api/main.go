@@ -8,7 +8,7 @@ import (
 
 const webPort = "80"
 
-type Config struct{} // esto es como crear una caja y meter todas las rutas aca
+type Config struct{} // global config
 
 func main() {
 	// esto es toda la configuracion centrada en un lugar

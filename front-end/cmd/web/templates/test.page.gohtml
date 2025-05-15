@@ -49,11 +49,6 @@
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-            return response.json();
-        }
 
         return response.text().then((text) => {
             throw new Error(`Expected JSON, got: ${text}`);
