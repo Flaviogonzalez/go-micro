@@ -20,6 +20,7 @@ func (app *Config) routes() http.Handler {
 		MaxAge:           300,
 	}))
 
+	// solo para debug
 	mux.Use(middleware.Heartbeat("/ping"))
 
 	// en orden -> despues de crear el handler, voy acá y agrego la ruta para el broker

@@ -8,6 +8,12 @@
 		},
 		{
 			"path": "project"
+		},
+		{
+			"path": "authentication-service"
+		},
+		{
+			"path": "."
 		}
 	],
 	"settings": {}
