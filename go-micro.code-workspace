@@ -13,7 +13,7 @@
 			"path": "authentication-service"
 		},
 		{
-			"path": "."
+			"path": "logger-service"
 		}
 	],
 	"settings": {}

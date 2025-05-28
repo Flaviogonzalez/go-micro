@@ -7,6 +7,7 @@
                 <h1 class="mt-5">Test microservices</h1>
                 <hr>
                 <a id="send" class="btn btn-outline-secondary" href="javascript:void(0);">Test Broker</a>
+                <a id="auth" class="btn btn-outline-secondary" href="javascript:void(0);">Test Auth</a>
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output shows here...</span>
                 </div>
@@ -32,38 +33,64 @@
 {{define "js"}}
     <script>
         let brokerBtn = document.getElementById("send");
+        let authBtn = document.getElementById("auth");
         let output = document.getElementById("output");
         let sent = document.getElementById("payload");
         let received = document.getElementById("received");
 
- brokerBtn.addEventListener("click", function() {
-    const requestOptions = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }
+        authBtn.addEventListener("click", function() {
+            const payload = {
+                action: "auth",
+                auth: {
+                    email: "admin@example.com",
+                    password: "verysecret"
+                }
+            }
+            
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            
+            const body = {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: headers
+            }
 
-    fetch("http://localhost:8080", requestOptions)
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+            fetch("http:\/\/localhost:8080/handle", body)
+            .then((response) => response.json())
+            .then((data) => {
+                sent.innerHTML = JSON.stringify(payload, undefined, 4);
+                received.innerHTML = JSON.stringify(data, undefined, 2);
 
-        return response.text().then((text) => {
-            throw new Error(`Expected JSON, got: ${text}`);
+                if (data.error) {
+                    output.innerHTML += `<br><strong>Error: <strong>${data.message}<br>`
+                } else {
+                    output.innerHTML += `<br><strong>Response from broker service</strong>: ${data.message}</br>`;
+                }
+            })
+            .catch((error) => {
+                output.innerHTML += `<br>Catch Error: ${error.message}</br>`;
+                console.error("Fetch Error:", error);
+            });
         });
-    })
-    .then((data) => {
-        sent.innerHTML = "Empty POST request sent";
-        received.innerHTML = JSON.stringify(data, undefined, 2);
-        output.innerHTML += `<br><strong>Response from broker service</strong>: ${data.message}</br>`;
-    })
-    .catch((error) => {
-        output.innerHTML += `<br>Error: ${error.message}</br>`;
-        console.error("Fetch Error:", error);
-    });
-});
+
+        brokerBtn.addEventListener("click", function() {
+            const body = {
+                method: "POST",
+            }
+
+            fetch("http:\/\/localhost:8080", body)
+            .then((response) => response.json())
+            .then((data) => {
+                sent.innerHTML = "Empty POST request sent";
+                received.innerHTML = JSON.stringify(data, undefined, 2);
+                output.innerHTML += `<br><strong>Response from broker service</strong>: ${data.message}</br>`;
+            })
+            .catch((error) => {
+                output.innerHTML += `<br>Error: ${error.message}</br>`;
+                console.error("Fetch Error:", error);
+            });
+        });
 
     </script>
 {{end}}
