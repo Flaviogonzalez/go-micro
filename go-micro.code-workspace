@@ -16,5 +16,9 @@
 			"path": "logger-service"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			".tmpl": "html"
+		}
+	}
 }
